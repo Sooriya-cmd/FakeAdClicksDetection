@@ -18,7 +18,34 @@
 
  
 
-###### To run the production code - Just run "python main.py"
+### Run the application
+
+Use Python 3.11 on Windows. TensorFlow does not provide a native Windows
+installation for the newer Python versions used by this project environment.
+The setup below uses `uv` to select Python 3.11.
+From the repository root, create and activate a virtual environment, install
+the project dependencies, and run the entry point:
+
+```powershell
+uv venv --python 3.11 .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python main.py
+```
+
+Open **http://127.0.0.1:5000** to use the live demo. Choose a user profile,
+click event, and ad category to see the saved TensorFlow model classify the
+click. The page also shows dataset totals and recent predictions from the
+current browser session. Keep the terminal running while using the website;
+press `Ctrl+C` to stop it.
+
+The website uses the trained model in `saved_models/click_model/1/`. To
+retrain it and regenerate the CSV predictions instead, run:
+
+```powershell
+python main.py --train
+```
 
 
 ###### Projects details are as follows 
@@ -129,4 +156,3 @@
  <a href="https://medium.com/@himalayaashish" target="blank">
   <img align="center" alt="Himalaya's Twitter" width="30px" src="https://www.vectorlogo.zone/logos/medium/medium-tile.svg" />
  </a>
-

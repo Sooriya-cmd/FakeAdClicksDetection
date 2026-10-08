@@ -76,7 +76,7 @@ class CLICK(BaseModel):
         LOG.info(f'Predicting for test dataset')
         LOG.info(f'Predicting')
         predictor_cols = ['UserId', 'Event_click_ad', 'Event_click_carrousel','Event_phone_call', 'Event_send_email', 'Event_send_sms','Category_Holidays', 'Category_Jobs', 'Category_Leisure','Category_Motor', 'Category_Phone', 'Category_Real_State']
-        test_X = self.test_dataset[predictor_cols]
+        test_X = self.test_dataset[predictor_cols].astype(np.float32).copy()
         # Use the model to make predictions
         predicted_results = self.model.predict(test_X)
         # print(predicted_results)
@@ -84,4 +84,3 @@ class CLICK(BaseModel):
         test_X['Fake_Prediction'] = np.where(test_X['Predictions'] < 0.5, 0, 1)
         print(test_X.head())
         test_X.to_csv("Final_Fake_prediction",columns= ['UserId', 'Event_click_ad', 'Event_click_carrousel','Event_phone_call', 'Event_send_email', 'Event_send_sms','Category_Holidays', 'Category_Jobs', 'Category_Leisure','Category_Motor', 'Category_Phone', 'Category_Real_State','Fake_Prediction'],index=False)
-

@@ -1,9 +1,11 @@
-from configs.config import CFG
-from model.model import CLICK
+import argparse
 
 
-def run():
-    """Builds model, loads data, trains and evaluates"""
+def train_model():
+    """Build, train, and evaluate the click classifier."""
+    from configs.config import CFG
+    from model.model import CLICK
+
     model = CLICK(CFG)
     model.load_data()
     model.build()
@@ -13,4 +15,17 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    parser = argparse.ArgumentParser(description="Fake ad-click detection demo")
+    parser.add_argument(
+        "--train",
+        action="store_true",
+        help="train and evaluate the model instead of starting the local website",
+    )
+    arguments = parser.parse_args()
+
+    if arguments.train:
+        train_model()
+    else:
+        from web_app import create_app
+
+        create_app().run(host="127.0.0.1", port=5000, debug=False)

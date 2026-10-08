@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101511">
+  <title>Clickwatch — Fake click detection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Clickwatch home">
+      <span class="brand-mark"><span></span><span></span><span></span></span>
+      <span>clickwatch<span class="brand-period">.</span></span>
+    </a>
+    <div class="topbar-right">
+      <span class="local-tag"><span class="live-dot"></span> RUNNING LOCALLY</span>
+      <span class="model-tag">MODEL <b>v1.0</b></span>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <div class="intro-copy">
+        <div class="eyebrow"><span class="eyebrow-line"></span> AD TRAFFIC INTELLIGENCE</div>
+        <h1>Every click<br>leaves a <span>footprint.</span></h1>
+        <p class="intro-text">Watch a machine-learning model score click behavior in real time. Change the signals, run the check, and see what the model sees.</p>
+        <div class="intro-foot">
+          <span class="pulse-ring"><span></span></span>
+          <span>LIVE CLASSIFICATION</span>
+          <span class="foot-divider">/</span>
+          <span>TensorFlow · 12 signals</span>
+        </div>
+      </div>
+
+      <div class="orbit-wrap" aria-hidden="true">
+        <div class="orbit orbit-outer"></div>
+        <div class="orbit orbit-inner"></div>
+        <div class="orbit-core">
+          <span class="core-cross core-cross-h"></span>
+          <span class="core-cross core-cross-v"></span>
+          <span class="core-dot"></span>
+          <span class="core-label">CLICK<br>ACTIVITY</span>
+        </div>
+        <span class="orbit-point point-a"></span>
+        <span class="orbit-point point-b"></span>
+        <span class="orbit-point point-c"></span>
+        <span class="orbit-label orbit-label-a">SIGNAL DETECTED</span>
+        <span class="orbit-label orbit-label-b">MODEL ONLINE</span>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="Dataset statistics">
+      <article class="stat-card">
+        <span class="stat-index">01 / DATA</span>
+        <strong id="training-count">—</strong>
+        <span class="stat-label">training click records</span>
+        <span class="stat-decoration decoration-grid"></span>
+      </article>
+      <article class="stat-card">
+        <span class="stat-index">02 / USERS</span>
+        <strong id="profile-count">—</strong>
+        <span class="stat-label">known user profiles</span>
+        <span class="stat-decoration decoration-bars"><i></i><i></i><i></i><i></i><i></i></span>
+      </article>
+      <article class="stat-card">
+        <span class="stat-index">03 / TEST SET</span>
+        <strong id="test-count">—</strong>
+        <span class="stat-label">held-out click records</span>
+        <span class="stat-decoration decoration-wave">〰</span>
+      </article>
+      <article class="stat-card stat-card-accent">
+        <span class="stat-index">04 / INPUTS</span>
+        <strong id="feature-count">12</strong>
+        <span class="stat-label">signals analyzed per click</span>
+        <span class="stat-decoration decoration-spark">✳</span>
+      </article>
+    </section>
+
+    <section class="demo-section" id="demo">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> INTERACTIVE PLAYGROUND</div>
+          <h2>Put a click to the test<span>.</span></h2>
+        </div>
+        <div class="threshold-note"><span class="threshold-icon">⌁</span> Decision threshold <b>50%</b></div>
+      </div>
+
+      <div class="demo-grid">
+        <form class="control-panel" id="score-form">
+          <div class="panel-topline">
+            <span class="panel-kicker">01 — BUILD A CLICK</span>
+            <span class="panel-step">3 SIGNALS</span>
+          </div>
+          <label for="user-id">User profile <span>KNOWN PROFILE</span></label>
+          <div class="select-wrap">
+            <span class="field-icon user-icon">◎</span>
+            <select id="user-id" name="user_id" required><option value="">Loading profiles…</option></select>
+            <span class="select-chevron">⌄</span>
+          </div>
+          <label for="event">Click event <span>BEHAVIOR</span></label>
+          <div class="select-wrap">
+            <span class="field-icon event-icon">↗</span>
+            <select id="event" name="event" required><option value="">Loading events…</option></select>
+            <span class="select-chevron">⌄</span>
+          </div>
+          <label for="category">Ad category <span>CONTEXT</span></label>
+          <div class="select-wrap">
+            <span class="field-icon category-icon">◈</span>
+            <select id="category" name="category" required><option value="">Loading categories…</option></select>
+            <span class="select-chevron">⌄</span>
+          </div>
+          <button class="score-button" id="score-button" type="submit">
+            <span class="button-text">Analyze this click</span><span class="button-arrow">↗</span>
+          </button>
+          <p class="form-footnote"><span>●</span> Scored instantly by the local trained model</p>
+          <p class="form-error" id="form-error" role="alert"></p>
+        </form>
+
+        <article class="result-panel" aria-live="polite">
+          <div class="panel-topline">
+            <span class="panel-kicker">02 — MODEL READOUT</span>
+            <span class="result-live"><span class="live-dot"></span> LIVE</span>
+          </div>
+          <div class="result-main" id="result-main">
+            <div class="score-visual">
+              <div class="score-ring" id="score-ring">
+                <div class="score-ring-inner">
+                  <span class="score-value" id="score-value">—</span>
+                  <span class="score-caption">FAKE CLICK SCORE</span>
+                </div>
+              </div>
+              <div class="score-scale"><span>0%</span><span>50% THRESHOLD</span><span>100%</span></div>
+            </div>
+            <div class="verdict-wrap">
+              <span class="verdict-label">CLASSIFICATION</span>
+              <h3 class="verdict" id="verdict">Ready to score</h3>
+              <p class="verdict-copy" id="verdict-copy">Choose click signals and run the model to see its prediction.</p>
+              <div class="decision-track"><span class="decision-fill" id="decision-fill"></span><span class="decision-threshold"></span></div>
+              <div class="track-labels"><span>LEGITIMATE</span><span>FAKE</span></div>
+            </div>
+          </div>
+          <div class="signal-receipt" id="signal-receipt">
+            <span class="receipt-mark">↳</span>
+            <span id="receipt-text">Your click signals will appear here after analysis.</span>
+            <span class="receipt-status" id="receipt-status">AWAITING INPUT</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="activity-section">
+      <div class="activity-heading">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> SESSION FEED</div>
+          <h2>Recent analyses<span>.</span></h2>
+        </div>
+        <span class="session-count" id="session-count">0 CHECKS THIS SESSION</span>
+      </div>
+      <div class="activity-list" id="activity-list">
+        <div class="empty-state"><span class="empty-icon">⌁</span><span>Run your first analysis to start the feed.</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a class="brand footer-brand" href="/"><span class="brand-mark"><span></span><span></span><span></span></span><span>clickwatch<span class="brand-period">.</span></span></a>
+    <span>LOCAL DEMO <span class="footer-separator">/</span> YOUR DATA STAYS ON THIS MACHINE</span>
+    <span>FAKE AD CLICK DETECTION <span class="footer-separator">·</span> 2026</span>
+  </footer>
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</body>
+</html>
